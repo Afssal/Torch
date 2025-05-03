@@ -88,7 +88,10 @@ for epoch in range(num_epochs):
             outputs = model(feat)
             _,predicted = torch.max(outputs.data,1)
             total += lab.size(0)
-            print("lab",lab.size(0))
             correct += (predicted == lab).sum().item()
 
     print(f"Epoch {epoch} - Test Accuracy: {100 * correct / total:.2f}%")
+
+
+
+torch.onnx.export(model, torch.rand((1, 256)), 'mnist.onnx')
