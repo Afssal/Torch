@@ -42,8 +42,8 @@ criterion = nn.CrossEntropyLoss()
 learning_rate = 0.01
 optimizer = torch.optim.SGD(model.parameters(),lr=learning_rate)
 
-train_loader = torch.utils.data.DataLoader(dataset=train_dataset,batch_size=32)
-valid_loader = torch.utils.data.DataLoader(dataset=validation_dataset,batch_size=32)
+train_loader = DataLoader(dataset=train_dataset,batch_size=32)
+valid_loader = DataLoader(dataset=validation_dataset,batch_size=32)
 
 
 n_epochs = 5
@@ -74,6 +74,6 @@ for epoch in range(n_epochs):
 
     print(f"Epoch {epoch} - Test Accuracy : {100*correct/total:.2f}%")
 
-    
+
 
      

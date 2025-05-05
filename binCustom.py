@@ -105,3 +105,30 @@ for epoch in range(num_epochs):
     acc = 100 * correct / total
     print(f"Epoch {epoch+1} - Test Accuracy: {acc:.2f}%")
 
+
+#dataset loading 
+"""
+dataset structure
+
+    data/
+    ├── class1/
+    │   ├── img1.png
+    │   └── img2.png
+    ├── class2/
+    │   ├── img3.png
+    │   └── img4.png
+
+code
+    from torch.utils.data import DataLoader, random_split
+    
+    dataset = datasets.ImageFolder(root='data', transform=transform)
+
+    # Split into train and test sets
+    train_size = int(0.8 * len(dataset))
+    test_size = len(dataset) - train_size
+    train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
+
+    # DataLoaders
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+"""
