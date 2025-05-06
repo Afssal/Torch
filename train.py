@@ -37,7 +37,7 @@ class ToyDataset(Dataset):
 
     def __getitem__(self,index):
         one_x = self.features[index]
-        one_y = self.features[index]
+        one_y = self.labels[index]
         return one_x,one_y
     
     def __len__(self):
