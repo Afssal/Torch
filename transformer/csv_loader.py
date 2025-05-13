@@ -37,11 +37,26 @@ def collate_fn(batch):
 
     return src_batch,tgt_batch
 
-dataset = Translation()
-dataloader = DataLoader(dataset,batch_size=2,shuffle=True,collate_fn=collate_fn)
+def CsvDataloader():
 
-for src,tgt in dataloader:
-    print(src,tgt)
+
+    dataset = Translation()
+    dataloader = DataLoader(dataset,batch_size=2,shuffle=True,collate_fn=collate_fn)
+    return dataloader
+
+
+
+def vocabulary():
+    src_token = Tokenizer.from_file('/home/afsal/Downloads/Torch/transformer/english.json')
+    tgt_token = Tokenizer.from_file('/home/afsal/Downloads/Torch/transformer/german.json')
+
+    return src_token,tgt_token
+
+# dataset = Translation()
+# dataloader = DataLoader(dataset,batch_size=2,shuffle=True,collate_fn=collate_fn)
+
+# for src,tgt in dataloader:
+#     print(src,tgt)
 
 # for src,tgt in translates:
 #     print(src,tgt)
