@@ -10,6 +10,7 @@ from transformer1 import Transformer
 from evaluate import idx_to_word,get_bleu
 from epoch_timer import epoch_time
 
+from config import *
 
 
 def count_parameters(model):
@@ -29,27 +30,27 @@ model = Transformer(
     trg_sos_idx=2,
     enc_vocab_size=14520,
     dec_vocab_size=25000,
-    max_len=256,
-    ffn_hidden=2048,
-    n_head=8,
-    n_layers=6,
-    drop_out=0.1,
-    d_model=512,
-    device=torch.device("cuda" if torch.cuda.is_available() else 'cpu')
+    max_len=max_len,
+    ffn_hidden=ffn_hidden,
+    n_head=n_head,
+    n_layers=n_layers,
+    drop_out=drop_out,
+    d_model=d_model,
+    device=device
 )
 
 print(f"model has {count_parameters(model):,} trainable parameters")
 model.apply(initialize_weights)
 optimizers = Adam(params=model.parameters(),
-                  lr=1e-5,
-                  weight_decay=5e-4,
-                  eps=5e-9)
+                  lr=lr,
+                  weight_decay=weight_decay,
+                  eps=eps)
 
 
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(
     optimizer=optimizers,
-    factor=0.9,
-    patience=10
+    factor=factor,
+    patience=patience
 )
 
 criterion = nn.CrossEntropyLoss(ignore_index=1)
@@ -64,10 +65,13 @@ def train(model,iterator,optimizer,criterion,clip):
         # trg = batch.trg
 
         optimizer.zero_grad()
+        # print(f"trg label {trg[:,:-1]}")
         output = model(src,trg[:,:-1])
 
         output_reshape = output.contiguous().view(-1,output.shape[-1])
+        # print(f"output reshape {output_reshape}")
         trg = trg[:,1:].contiguous().view(-1)
+        # print(f"trg : {trg}")
 
         loss = criterion(output_reshape,trg)
         loss.backward()
@@ -77,7 +81,8 @@ def train(model,iterator,optimizer,criterion,clip):
 
         epoch_loss += loss.item()
         print('step :', round((i / len(iterator)) * 100, 2), '% , loss :', loss.item())
-
+        
+    # print('step :', round((i / len(iterator)) * 100, 2), '% , loss :', loss.item())
 
     return epoch_loss / len(iterator)
 
@@ -87,7 +92,7 @@ def evaluate(model,iterator,criterion):
     model.eval()
     epoch_loss = 0
     batch_bleu = []
-    batch_size = 128
+    batch_size = batch_size
     with torch.no_grad():
         for i,(src,trg) in enumerate(iterator):
             # src = batch.src
